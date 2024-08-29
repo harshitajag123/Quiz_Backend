@@ -52,8 +52,8 @@ exports.createQuiz = async (req, res) => {
 		const _id = new mongoose.Types.ObjectId();
 
 		//genarting url
-		//const URL = `https://cuvette-quizzie.vercel.app/anonymous/${_id}`;
-		const URL = `https://quiz-backend-nxpv.onrender.com/take-quiz/${_id}`;
+
+		const url = `https://quiz-backend-nxpv.onrender.com/take-quiz/${_id}`;
 
 		//cretaing new quiz
 		const quize = await Quize.create({
@@ -292,33 +292,35 @@ exports.deleteQuize = async (req, res) => {
 exports.saveQuizeResult = async (req, res) => {
 	try {
 		const { quizeId, choosedOptions } = req.body;
-		//checking if id is not present
+
 		if (!quizeId) {
-			return res.status(400).json({ error: "id is required" });
+			return res.status(400).json({ error: "Quiz ID is required" });
 		}
 
-		//checking if choosedOptions is not present
-		if (!choosedOptions) {
-			return res.status(400).json({ error: "choosedOptions is required" });
+		if (!choosedOptions || !Array.isArray(choosedOptions)) {
+			return res.status(400).json({ error: "choosedOptions must be an array" });
 		}
 
 		let quize = await Quize.findById(quizeId);
 		if (!quize) {
-			return res.status(400).json({ error: "quiz not found,invalid id" });
+			return res.status(404).json({ error: "Quiz not found, invalid ID" });
 		}
 
 		let correctAttempts = 0;
-		for (let i = 0; i < choosedOptions.length; i++) {
-			if (quize.quizeType == "QnA") {
-				if (choosedOptions[i] == quize.QnAQuestions[i].correctOption) {
-					quize.QnAQuestions[i].correctAttempts += 1;
-					correctAttempts += 1;
-				}
-				if (choosedOptions[i]) {
+
+		if (quize.quizeType === "QnA") {
+			for (let i = 0; i < choosedOptions.length; i++) {
+				if (i < quize.QnAQuestions.length) {
+					if (choosedOptions[i] == quize.QnAQuestions[i].correctOption) {
+						quize.QnAQuestions[i].correctAttempts += 1;
+						correctAttempts += 1;
+					}
 					quize.QnAQuestions[i].totalAttempts += 1;
 				}
-			} else {
-				if (choosedOptions[i]) {
+			}
+		} else {
+			for (let i = 0; i < choosedOptions.length; i++) {
+				if (i < quize.pollQuestions.length && choosedOptions[i]) {
 					quize.pollQuestions[i].options[
 						Number(choosedOptions[i]) - 1
 					].totalChoosed += 1;
@@ -326,17 +328,66 @@ exports.saveQuizeResult = async (req, res) => {
 			}
 		}
 
-		const updatedQuize = await Quize.findByIdAndUpdate(quizeId, quize);
-		if (updatedQuize) {
-			res.status(200).json({
-				success: true,
-				message: "quiz updated successfully",
-				correctAttempts: quize.quizeType == "QnA" ? correctAttempts : null,
-			});
-		} else {
-			res.status(500).json({ error: "error while updating quiz" });
-		}
+		await quize.save();
+
+		res.status(200).json({
+			success: true,
+			message: "Quiz updated successfully",
+			correctAttempts: quize.quizeType == "QnA" ? correctAttempts : null,
+		});
 	} catch (error) {
-		res.status(400).json({ error: error.message });
+		res.status(500).json({ error: error.message });
 	}
 };
+
+// exports.saveQuizeResult = async (req, res) => {
+// 	try {
+// 		const { quizeId, choosedOptions } = req.body;
+// 		//checking if id is not present
+// 		if (!quizeId) {
+// 			return res.status(400).json({ error: "id is required" });
+// 		}
+
+// 		//checking if choosedOptions is not present
+// 		if (!choosedOptions) {
+// 			return res.status(400).json({ error: "choosedOptions is required" });
+// 		}
+
+// 		let quize = await Quize.findById(quizeId);
+// 		if (!quize) {
+// 			return res.status(400).json({ error: "quiz not found,invalid id" });
+// 		}
+
+// 		let correctAttempts = 0;
+// 		for (let i = 0; i < choosedOptions.length; i++) {
+// 			if (quize.quizeType == "QnA") {
+// 				if (choosedOptions[i] == quize.QnAQuestions[i].correctOption) {
+// 					quize.QnAQuestions[i].correctAttempts += 1;
+// 					correctAttempts += 1;
+// 				}
+// 				if (choosedOptions[i]) {
+// 					quize.QnAQuestions[i].totalAttempts += 1;
+// 				}
+// 			} else {
+// 				if (choosedOptions[i]) {
+// 					quize.pollQuestions[i].options[
+// 						Number(choosedOptions[i]) - 1
+// 					].totalChoosed += 1;
+// 				}
+// 			}
+// 		}
+
+// 		const updatedQuize = await Quize.findByIdAndUpdate(quizeId, quize);
+// 		if (updatedQuize) {
+// 			res.status(200).json({
+// 				success: true,
+// 				message: "quiz updated successfully",
+// 				correctAttempts: quize.quizeType == "QnA" ? correctAttempts : null,
+// 			});
+// 		} else {
+// 			res.status(500).json({ error: "error while updating quiz" });
+// 		}
+// 	} catch (error) {
+// 		res.status(400).json({ error: error.message });
+// 	}
+// };
