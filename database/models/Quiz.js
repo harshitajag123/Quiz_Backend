@@ -54,7 +54,7 @@ const quizeSchema = new mongoose.Schema({
 					imageURL: String,
 					totalChoosed: {
 						type: Number,
-						deafult: 0,
+						default: 0,
 					},
 				},
 			],
