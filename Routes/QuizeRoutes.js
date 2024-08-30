@@ -1,5 +1,6 @@
 const userAuth = require("../Middlewares/userAuth");
 const express = require("express");
+const Quize = require("../database/models/Quiz");
 const router = express.Router();
 const {
 	createQuiz,
