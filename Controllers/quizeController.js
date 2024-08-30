@@ -53,7 +53,9 @@ exports.createQuiz = async (req, res) => {
 
 		//genarting url
 
-		const url = `https://quiz-backend-nxpv.onrender.com/take-quiz/${_id}`;
+		//const URL = `https://quiz-backend-nxpv.onrender.com/anonymous/${_id}`;
+
+		const URL = `https://quiz-backend-nxpv.onrender.com/take-quiz/${_id}`;
 
 		//cretaing new quiz
 		const quize = await Quize.create({
