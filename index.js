@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 
 dotenv.config();
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 10000;
 
 //mongoose connection
 async function connectDB() {
