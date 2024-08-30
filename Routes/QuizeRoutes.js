@@ -15,7 +15,7 @@ const {
 // Route to create a quiz
 router.route("/create-quiz").post(userAuth, createQuiz);
 // Route to take a quiz anonymously
-router.route("/take-quiz/:id").get(getQuizAnonymous);
+router.route("/take-quiz/:_id").get(getQuizAnonymous);
 // Route to save quiz result
 router.route("/save-quiz-result").post(saveQuizeResult);
 // Route to get all quizzes (authenticated)
