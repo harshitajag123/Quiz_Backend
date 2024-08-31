@@ -57,7 +57,7 @@ exports.createQuiz = async (req, res) => {
 		//const URL = `https://cuvette-quizzie.vercel.app/anonymous/${_id}`;
 		//const URL = `http://localhost:5000/api/quiz/take-quiz/${_id}`;
 
-		const URL = `https://quiz-backend-nxpv.onrender.com/quiz/take-quiz/${_id}`;
+		const URL = `https://quiz-backend-nxpv.onrender.com/take-quiz/${_id}`;
 
 		//cretaing new quiz
 		const quize = await Quize.create({
