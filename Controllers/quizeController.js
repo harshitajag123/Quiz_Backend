@@ -57,7 +57,7 @@ exports.createQuiz = async (req, res) => {
 		//const URL = `https://cuvette-quizzie.vercel.app/anonymous/${_id}`;
 		//const URL = `http://localhost:5000/api/quiz/take-quiz/${_id}`;
 
-		const URL = `https://quiz-backend-nxpv.onrender.com/api/quiz/take-quiz/${_id}`;
+		const URL = `https://quiz-backend-nxpv.onrender.com/quiz/take-quiz/${_id}`;
 
 		//cretaing new quiz
 		const quize = await Quize.create({
@@ -78,6 +78,40 @@ exports.createQuiz = async (req, res) => {
 		console.log("User ID:", req.user._id);
 		console.log("Quiz created successfully");
 		console.log("quiz-id: ", quize._id);
+	} catch (error) {
+		res.status(500).json({ error: error.message });
+	}
+};
+
+// function to get quiz details by id
+exports.getQuizById = async (req, res) => {
+	try {
+		const { id } = req.params;
+		const quiz = await Quize.findById(id);
+
+		if (!quiz) {
+			return res.status(404).json({ error: "Quiz not found" });
+		}
+
+		// Prepare the response in a format expected by the frontend
+		const formattedQuiz = {
+			_id: quiz._id,
+			name: quiz.name,
+			quizeType: quiz.quizeType,
+			time: quiz.timePerQuestion,
+			questions:
+				quiz.quizeType === "QnA"
+					? quiz.QnAQuestions.map((q) => ({
+							ques: q.ques,
+							optionType: q.optionType,
+							options: q.options,
+							_id: q._id,
+					  }))
+					: [],
+			pollQuestions: quiz.quizeType === "poll" ? quiz.pollQuestions : [],
+		};
+
+		res.status(200).json(formattedQuiz);
 	} catch (error) {
 		res.status(500).json({ error: error.message });
 	}
