@@ -9,7 +9,7 @@ const app = express();
 // Use CORS
 app.use(
 	cors({
-		origin: ["http://localhost:5173", "https://quizze-app-sand.vercel.app/"], // Frontend URL
+		origin: ["http://localhost:5173", "https://quizze-app-sand.vercel.app"], // Frontend URL
 		methods: ["GET", "POST", "PUT", "DELETE"], // Allowed HTTP methods
 		credentials: true, // Enable this if you're dealing with cookies
 	})
