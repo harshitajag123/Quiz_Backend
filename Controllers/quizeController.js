@@ -56,8 +56,8 @@ exports.createQuiz = async (req, res) => {
 		//const URL = `https://quiz-backend-nxpv.onrender.com/anonymous/${_id}`;
 		//const URL = `https://cuvette-quizzie.vercel.app/anonymous/${_id}`;
 		//const URL = `http://localhost:5000/api/quiz/take-quiz/${_id}`;
-
-		const URL = `https://quiz-backend-nxpv.onrender.com/take-quiz/${_id}`;
+		const URL = `http://localhost:5000/anonymous/${_id}`;
+		//const URL = `https://quiz-backend-nxpv.onrender.com/take-quiz/${_id}`;
 
 		//cretaing new quiz
 		const quize = await Quize.create({
@@ -235,6 +235,7 @@ exports.getAllQuizesOfUser = async (req, res) => {
 		res.status(500).json({ error: error.message });
 	}
 };
+
 //function to get quizes of user --to get one quiz
 exports.getQuize = async (req, res) => {
 	try {
@@ -296,6 +297,7 @@ exports.editQuize = async (req, res) => {
 		return res.status(400).json({ error: error.message });
 	}
 };
+
 //function to delete quiz
 exports.deleteQuize = async (req, res) => {
 	try {
