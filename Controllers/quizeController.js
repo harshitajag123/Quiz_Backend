@@ -53,10 +53,10 @@ exports.createQuiz = async (req, res) => {
 
 		//genarting url
 
-		//const URL = `https://quiz-backend-nxpv.onrender.com/anonymous/${_id}`;
+		const URL = `https://quizze-app-sand.vercel.app//anonymous/${_id}`;
 		//const URL = `https://cuvette-quizzie.vercel.app/anonymous/${_id}`;
 		//const URL = `http://localhost:5000/api/quiz/take-quiz/${_id}`;
-		const URL = `http://localhost:5000/anonymous/${_id}`;
+		//const URL = `http://localhost:10000/anonymous/${_id}`;
 		//const URL = `https://quiz-backend-nxpv.onrender.com/take-quiz/${_id}`;
 
 		//cretaing new quiz
